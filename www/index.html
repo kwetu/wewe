@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Radio Uganda | top radio stations in uganda</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/jquery.mobile-1.2.0.css" />
+		<link rel="stylesheet" href="css/leaflet.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		
+
+		<script src="js/noClickDelay.js"></script>
+		<script src="js/plugins/SocialSharing.js"></script>
+		<script src="js/jquery-1.8.2.min.js"></script>
+		<script src="js/iscroll.js"></script>
+		<script src="js/jquery.mobile-1.2.0.min.js"></script>
+		<script src="js/cordova-2.6.0.js"></script>
+
+		<script  type="text/javascript">
+			//Wait for Cordova to load
+			//
+			document.addEventListener("deviceready", onDeviceReady, false);
+
+			// Cordova is ready
+			//
+			function onDeviceReady() {
+				console.log('ready');
+			};
+
+			var myMedia = null;
+			var mediaTimer = null;
+			var mediaState = 0;
+			function updateMedia(radioUrl) {
+				if (myMedia != null) {
+					myMedia.release();
+				}
+				//     	document.getElementById('audio_title').innerHTML = radioUrl;
+				myMedia = new Media(radioUrl, function() {// success callback
+					console.log("Media instance success.");
+				}, function() {// error callback
+					console.log("Media error");
+				}, function(status) {
+					///console.log("status: "+status);
+					mediaState = status;
+					if (status == Media.MEDIA_NONE) {
+						console.log("MEDIA_NONE");
+					} else if (status == Media.MEDIA_STARTING) {
+						console.log("MEDIA_STARTING");
+						$.mobile.loading('show', {
+							text : 'buffering..',
+							textVisible : true,
+							theme : 'a',
+							textonly : false,
+							html : ''
+						});
+						//  				       	document.getElementById('audio_position').innerHTML = 'buffering';
+						$('#play .ui-btn-text').text("P A U S E");
+					} else if (status == Media.MEDIA_RUNNING) {
+						console.log("MEDIA_RUNNING");
+						$.mobile.loading('hide');
+						$('#play .ui-btn-text').text("P A U S E");
+					} else if (status == Media.MEDIA_PAUSED) {
+						console.log("MEDIA_PAUSED");
+						$('#play .ui-btn-text').text("STREAM");
+					} else if (status == Media.MEDIA_STOPPED) {
+						console.log("MEDIA_STOPPED");
+						//  				       	document.getElementById('audio_position').innerHTML = '<3';
+						$('#play .ui-btn-text').text("STREAM");
+					} else {
+						console.log("MEDIA_UNKNOWN");
+					}
+				});
+			};
+			function playAudio() {
+				if (mediaState != Media.MEDIA_STARTING && mediaState != Media.MEDIA_RUNNING) {
+					myMedia.play();
+					// Update myMedia position every second
+					if (mediaTimer == null) {
+						mediaTimer = setInterval(function() {
+							// get myMedia position
+							myMedia.getCurrentPosition(
+							// success callback
+							function(position) {
+								if (mediaState == 2 && position > -1) {
+									//                          	document.getElementById('audio_position').innerHTML = position + '/' + myMedia.getDuration() + ' secs.';
+								}
+							},
+							// error callback
+							function(e) {
+								console.log("Error getting pos=" + e);
+								//                      	document.getElementById('audio_position').innerHTML = "Error: " + e;
+							});
+						}, 1000);
+					}
+				} else {
+					myMedia.pause();
+				}
+			};
+			function stopAudio() {
+				myMedia.stop();
+				clearInterval(mediaTimer);
+				mediaTimer = null;
+			};
+			function startAudio(streamingUrl) {
+				updateMedia(streamingUrl);
+				playAudio();
+			};
+
+			
+		</script>
+		<script type="text/javascript">
+			/*social share-->*/
+			$(document).ready(function() {
+				$('#buttons').jsShare({
+					maxwidth : 360
+				});
+				$('#buttons-expanded').jsShare({
+					initialdisplay : 'expanded',
+					maxwidth : 360
+				});
+			});
+		</script>
+	</head>
+	<body >
+
+		<div data-role="page" id="main" >
+
+			<div id="branding" align="center">
+
+				<p><img src="img/Logo_radio_okapi.gif">
+				</p>
+
+			</div><!--branding-->
+
+			<div data-role='content' id="wrapper">
+
+				<ul data-role='listview' data-theme='c' data-inset='true' data-filter="true">
+					<li data-role="list-divider">
+						Select Country &amp; Listen Radio
+					</li>
+					<li>
+						<a href='#kenya'><img src="img/kenya.png"><span class="ui-li-count">3</span> <h3 style='margin-left: 25px'>Kenya</h3> </a>
+
+					</li>
+					<li>
+						<a href='#uganda'><img src="img/uganda.png"><span class="ui-li-count">3</span> <h3 style='margin-left: 25px'>Uganda</h3> </a>
+					</li>
+					<li>
+						<a href='#rwanda'><img src="img/rwanda.png"><span class="ui-li-count">3</span> <h3 style='margin-left: 25px'>Rwanda</h3> </a>
+					</li>
+
+				</ul>
+			</div><!--content-->
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch class="ui-btn-active ui-state-persist">Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!--footer-->
+
+		</div>
+		<div data-role="page" id="maps" data-add-back-btn="true">
+			<!--info page-->
+			<div data-role="header" data-position="fixed" >
+				<h1>About Zikii</h1>
+			</div><!-- /header -->
+
+			<div id="branding" align="center">
+
+				<p><img src="img/Logo_radio_okapi.gif">
+				</p>
+
+			</div><!--branding-->
+			<!--nairobi-->
+
+			<div data-role='content' id="wrapper">
+
+				<h1 align="center">ZIKII v 1.0.0</h1>
+				<P align="center">
+					Is a radio app that makes radio accessible to
+					radio lovers all over the world
+				</P>
+
+				<p align="center"><img  src="img/splash.png"/>
+				</p>
+
+				<p align="center">
+					Built by <a href="http://kwetudesign.com/">Daniel Katunga, Macellin Olinabanji &amp; Antony Muthii </a> &amp; in <a href="http://newsite.iuea.ac.ug//">International University of East Africa.</a>
+				</p>
+
+				<p align="center">
+					<a href="http://newsite.iuea.ac.ug/"><img  src="img/logobottom.png"/></a>
+				</p>
+
+			</div><!--content-->
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch>Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch class="ui-btn-active ui-state-persist">info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!--footer--><!--/info page-->
+
+		</div>
+		<!--social share page-->
+		<div data-role="page" id="share" data-add-back-btn="true">
+
+			<div data-role="header" data-position="fixed" >
+				<h1>About Zikii</h1>
+			</div><!-- /header -->
+
+			<div id="branding" align="center">
+
+				<p><img src="img/Logo_radio_okapi.gif">
+				</p>
+
+			</div><!--branding-->
+			<!--nairobi-->
+
+			<div data-role='content' id="wrapper">
+
+				<h1 align="center">Help Zikii</h1>
+				<p ><h2 align="center"><em>Spread the love</em></h2></p>
+				
+				
+			<button onclick="window.plugins.socialsharing.share('Listen to zikii')">share</button>
+
+			</div><!--content-->
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch class="ui-btn-active ui-state-persist" >share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!--footer--><!--/social share page-->
+
+		</div>
+		<div data-role="page" id="kenya" data-add-back-btn="true">
+			<div data-role="header" data-position="fixed">
+				<h1>Radio Stations</h1>
+			</div><!-- /header -->
+
+			<div id="branding" align="center">
+
+				<p><img src="img/Logo_radio_okapi.gif">
+				</p>
+
+			</div><!--branding-->
+			<!--nairobi-->
+
+			<div data-role='content' id="wrapper">
+
+				<ul data-role='listview' data-theme='c' data-inset='true' data-filter="true">
+
+					<li data-role="list-divider">
+						Radio's Name
+					</li>
+
+					<li>
+						<a href="#one">I FM 97.1</a>
+					</li>
+					<li>
+						<a href="#truth">90.7 Truth FM</a>
+					</li>
+					<li>
+						<a href="#hits">91.5 Hits Nairobi</a>
+					</li>
+
+				</ul>
+			</div><!--content-->
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch>Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch >share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!--footer-->
+
+		</div>
+		<div data-role="page" id="rwanda" data-add-back-btn="true">
+			<div data-role="header" data-position="fixed">
+				<h1>Radio Stations</h1>
+			</div><!-- /header -->
+
+			<div id="branding" align="center">
+
+				<p><img src="img/Logo_radio_okapi.gif">
+				</p>
+
+			</div><!--branding-->
+			<!--nairobi-->
+
+			<div data-role='content' id="wrapper">
+
+				<ul data-role='listview' data-theme='c' data-inset='true' data-filter="true">
+
+					<li data-role="list-divider">
+						Radio's Name
+					</li>
+
+					<li>
+						<a href="#flash">Flash FM Rwanda</a>
+					</li>
+					<li>
+						<a href="#radio10">Radio 10</a>
+					</li>
+					<li>
+						<a href="#kissfm">102.3 Kiss FM</a>
+					</li>
+
+				</ul>
+			</div><!--content-->
+
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!--footer-->
+
+		</div>
+		<div data-role="page" id="uganda" data-add-back-btn="true">
+			<div data-role="header" data-position="fixed">
+				<h1>Radio Stations</h1>
+			</div><!-- /header -->
+
+			<div id="branding" align="center">
+
+				<p><img src="img/Logo_radio_okapi.gif">
+				</p>
+
+			</div><!--branding-->
+
+			<div data-role='content' id="wrapper">
+
+				<ul data-role='listview' data-theme='c' data-inset='true' data-filter="true">
+
+					<li data-role="list-divider">
+						Radio's Name
+					</li>
+
+					<li>
+						<a href="#galaxy">102.8 Galaxy FM</a>
+					</li>
+					<li>
+						<a href="#xfm">x FM</a>
+					</li>
+					<li>
+						<a href="#capital">Capital FM</a>
+					</li>
+
+				</ul>
+			</div><!--content-->
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!--footer-->
+
+		</div>
+		<div data-role="page" id="one" data-add-back-btn="true">
+
+			<div data-role="header" data-position="fixed" >
+
+				<h1>I FM 97.1</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" id="wrapper">
+				<h1 align="center">I FM 97.1</h1>
+
+				<a href="#" data-role="button" onclick="startAudio('http://stream.radiookapi.net:8002/okapi');">Play</a>
+				<a href="#" data-role="button" onclick="stopAudio();">stop</a>
+
+			</div><!-- /content -->
+
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch>Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!-- /footer -->
+		</div>
+
+		<div data-role="page" id="truth" data-add-back-btn="true">
+
+			<div data-role="header" data-position="fixed" >
+
+				<h1>90.7 Truth FM</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" id="wrapper">
+				<h1 align="center">90.7 Truth FM</h1>
+
+				<a href="#" data-role="button" onclick="startAudio('http://stream.radiookapi.net:8002/okapi');">Play</a>
+				<a href="#" data-role="button" onclick="stopAudio();">stop</a>
+
+			</div><!-- /content -->
+
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!-- /footer -->
+		</div>
+		<div data-role="page" id="hits" data-add-back-btn="true">
+
+			<div data-role="header" data-position="fixed" >
+
+				<h1 >91.5 Hits Nairobi</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" id="wrapper">
+				<h1 align="center">91.5 Hits Nairobi</h1>
+
+				<a href="#" data-role="button" onclick="startAudio('http://stream.radiookapi.net:8002/okapi');">Play</a>
+				<a href="#" data-role="button" onclick="stopAudio();">stop</a>
+
+			</div><!-- /content -->
+
+			<div data-role="footer" data-position="fixed" >
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!-- /footer -->
+		</div>
+		<!--uganda radio stations-->
+		<div data-role="page" id="galaxy" data-add-back-btn="true">
+
+			<div data-role="header" data-position="fixed" >
+
+				<h1>102.8 Galaxy FM</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" id="wrapper">
+				<h1 align="center">102.8 Galaxy FM</h1>
+
+				<a href="#" data-role="button" onclick="startAudio('http://stream.radiookapi.net:8002/okapi');">Play</a>
+				<a href="#" data-role="button" onclick="stopAudio();">stop</a>
+
+			</div><!-- /content -->
+
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!-- /footer -->
+		</div>
+
+		<div data-role="page" id="xfm" data-add-back-btn="true">
+
+			<div data-role="header" data-position="fixed" >
+
+				<h1>x FM</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" id="wrapper">
+				<h1 align="center">x FM</h1>
+
+				<a href="#" data-role="button" onclick="startAudio('http://stream.radiookapi.net:8002/okapi');">Play</a>
+				<a href="#" data-role="button" onclick="stopAudio();">stop</a>
+
+			</div><!-- /content -->
+
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!-- /footer -->
+		</div>
+		<div data-role="page" id="capital" data-add-back-btn="true">
+
+			<div data-role="header" data-position="fixed" >
+
+				<h1>Capital FM</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" id="wrapper">
+				<h1 align="center">Capital FM</h1>
+
+				<a href="#" data-role="button" onclick="startAudio('http://stream.radiookapi.net:8002/okapi');">Play</a>
+				<a href="#" data-role="button" onclick="stopAudio();">stop</a>
+
+			</div><!-- /content -->
+
+			<div data-role="footer" data-position="fixed" >
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!-- /footer -->
+		</div>
+		<!--RADIO IN RWANDA-->
+		<!--uganda radio stations-->
+		<div data-role="page" id="flash" data-add-back-btn="true">
+
+			<div data-role="header" data-position="fixed" >
+
+				<h1>Flash FM Rwanda</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" id="wrapper">
+				<h1 align="center">Flash FM Rwanda</h1>
+
+				<a href="#" data-role="button" onclick="startAudio('http://stream.radiookapi.net:8002/okapi');">Play</a>
+				<a href="#" data-role="button" onclick="stopAudio();">stop</a>
+
+			</div><!-- /content -->
+
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!-- /footer -->
+		</div>
+
+		<div data-role="page" id="radio10" data-add-back-btn="true">
+
+			<div data-role="header" data-position="fixed" >
+
+				<h1>Radio10</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" id="wrapper">
+				<h1 align="center">Radio10</h1>
+
+				<a href="#" data-role="button" onclick="startAudio('http://stream.radiookapi.net:8002/okapi');">Play</a>
+				<a href="#" data-role="button" onclick="stopAudio();">stop</a>
+
+			</div><!-- /content -->
+
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li>
+							<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+						</li>
+						<li>
+							<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+						</li>
+						<li>
+							<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+						</li>
+					</ul>
+				</div>
+			</div><!-- /footer -->
+		</div>
+
+		<div data-role="page" id="kissfm" data-add-back-btn="true">
+
+			<div data-role="header" data-position="fixed">
+
+				<h1>102.3 Kiss FM</h1>
+			</div><!-- /header -->
+			<div id="wrapper">
+				<div data-role="content" >
+					<h1 align="center">102.3 Kiss FM</h1>
+
+					<a href="#" data-role="button" onclick="startAudio('http://stream.radiookapi.net:8002/okapi');">Play</a>
+					<a href="#" data-role="button" onclick="stopAudio();">stop</a>
+
+				</div><!-- /content -->
+
+				<div data-role="footer" data-position="fixed" >
+					<div data-role="navbar">
+						<ul>
+							<li>
+								<a href="#main" data-icon="home" data-transition="flip" data-prefetch >Home</a>
+							</li>
+							<li>
+								<a href="#share" data-icon="star" data-transition="flip" data-prefetch>share</a>
+							</li>
+							<li>
+								<a href="#maps" data-icon="info" data-transition="flip" data-prefetch>info</a>
+							</li>
+						</ul>
+					</div>
+				</div><!-- /footer -->
+
+			</div>
+
+	</body>
+	
+</html>

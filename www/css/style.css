@@ -1,0 +1,27 @@
+#branding {
+	background-color:#000000;
+		border:2px solid;
+		border-bottom-color: #FFFFFF;
+		border-top-color: #000000
+		border-left-color: #000000;
+		border-right-color: #000000;
+		margin-bottom: 7px;
+}
+
+#wra{
+	/* This image will be displayed fullscreen */
+	background:url('https://lh4.googleusercontent.com/-2wAZqlUa1lw/VFsygao4ayI/AAAAAAAAAAw/g1d8Asb5mKU/w608-h404-no/radio_okapi_logo_congo_kinshasha_kabila_love_money_illuminati.jpg') no-repeat center center;
+	
+	/* Ensure the html element always takes up the full height of the browser window */
+	min-height:100%;
+	
+	/* The Magic */
+	background-size:cover;
+}
+
+body{
+	/* Workaround for some mobile browsers */
+	min-height:100%;
+	font:14px/1.3 'Segoe UI',Arial, sans-serif;
+}
+
